@@ -1,0 +1,92 @@
+vnames: &id001
+  single_level_vnames:
+  - u10
+  - v10
+  - t2m
+  - msl
+  multi_level_vnames:
+  - z
+  - q
+  - u
+  - v
+  - t
+  hight_level_list:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  - 400
+  - 500
+  - 600
+  - 700
+  - 850
+  - 925
+  - 1000
+dataset:
+  train:
+    type: era5_npy_f32
+    data_dir: ./data/era5
+    train_stride: 6
+    file_stride: 6
+    sample_stride: 1
+    length: 3
+    vnames: *id001
+    simulation: True
+    gdas_obs_dir: ./data/gdas
+  valid:
+    type: era5_npy_f32
+    data_dir: ./data/era5
+    train_stride: 6
+    file_stride: 6
+    sample_stride: 1
+    length: 3
+    vnames: *id001
+    simulation: True
+    gdas_obs_dir: ./data/gdas
+dataloader:
+  num_workers: 4
+  pin_memory: true
+  prefetch_factor: 2
+  persistent_workers: true
+model:
+  type: Adas
+  params:
+    img_size:
+    - 69
+    - 721
+    - 1440
+    dim: 192
+    patch_size:
+    - 1
+    - 6
+    - 6
+    window_size:
+    - 2
+    - 5
+    - 10
+    depth: 8
+    num_heads: 8
+    drop_rate: 0.
+    attn_drop_rate: 0.
+    drop_path_rate: 0.1
+    ape: True
+    use_checkpoint: True
+  criterion: UnifyMAE
+  optimizer:
+    type: AdamW
+    params:
+      lr: 1.0e-04
+      betas:
+      - 0.9
+      - 0.9
+      weight_decay: 0.01
+  lr_scheduler:
+    type: OneCycleLR
+    params:
+      max_lr: 1.0e-4
+      pct_start: 0.2
+      anneal_strategy: cos
+      div_factor: 100
+      final_div_factor: 10000
