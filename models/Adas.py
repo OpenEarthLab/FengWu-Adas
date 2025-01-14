@@ -236,7 +236,7 @@ class Adas(object):
             total_pred_rmse = []
 
             for step, batch_data in enumerate(test_data_loader):
-                date = batch_data[-1]
+                date = batch_data[-1][0]
                 current_date = datetime(int(date[0:4]), int(date[10:12]), int(date[13:15]), int(date[16:18]))
                 batch_data = batch_data[0]
 
